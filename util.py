@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import pickle 
+import datetime
 
 base_url = 'https://www.nm.zsks.cn'
 
@@ -37,9 +38,17 @@ def org_data(each, major):
 
 
 def calc_pd(kw_list, category='L', batch=2, year=2018, sort_by='name', min_score=0, max_score=750):
-    pattern = '/zy_33_41_2018/B_14.html'
-    if category == 'L' and batch == 2 and year == 2018:
-        pattern = '/zy_33_41_2018/B_14.html'
+    pattern = '/zy_33_41_2019/B_{}.html'
+    now_time = datetime.datetime.now()
+    if now_time.minute >= 10:
+        now_time = now_time.hour - 8
+    else:
+        now_time = now_time.hour - 9
+    
+    pattern = pattern.format(now_time)
+    
+    # if category == 'L' and batch == 2 and year == 2018:
+        # pattern = '/zy_33_41_2018/B_14.html'
     
     r = requests.get(base_url+pattern)
     r.encoding='gb2312'
@@ -48,7 +57,7 @@ def calc_pd(kw_list, category='L', batch=2, year=2018, sort_by='name', min_score
     college_table = soup.find('table')
     t = get_row(college_table, True)[2:][1:-1]
 
-    major_pattern = '/zy_33_41_2018/4_B_{}_14.html'
+    major_pattern = '/zy_33_41_2019/4_B_{}_14.html'
     computer_list = list()
 
     for each in t:
@@ -89,7 +98,7 @@ def calc_pd(kw_list, category='L', batch=2, year=2018, sort_by='name', min_score
         if sort_by == 'score':
             df = df.sort_values('最低分数', reversed=True)
     
-    return df[:10]
+    return 1
 
 
 if __name__ == '__main__':
