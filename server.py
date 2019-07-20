@@ -12,14 +12,20 @@ with open('data.pkl', 'rb') as f:
 @app.route('/score/<keywords>/<mins>/<maxs>', methods=("POST", "GET"))
 def html_table(keywords, mins, maxs):
     kw = keywords.split('-')
-    dk = [t for t in d if t[6] >= int(mins) and t[6] <= int(maxs)]
     result = list()
+    x = util.calc_pd(keywords)
+    if x == 1:
+        with open('data.pkl', 'rb') as f:
+            d = pickle.load(f)
 
-    for row in dk:
-        for k in kw:
-            if k in row[3] or (row[8] is not None and k in row[8]):
-                result.append(row)
-                break
+        dk = [t for t in d if t[6] >= int(mins) and t[6] <= int(maxs)]
+        result = list()
+
+        for row in dk:
+            for k in kw:
+                if k in row[3] or (row[8] is not None and k in row[8]):
+                    result.append(row)
+                    break
 
     dk = pd.DataFrame(result)
     dk.columns =  ['院校代号', '院校名称', '专业代号', '专业名称', '计划人数', '已报人数', '最低分数', '学费', '备注']
