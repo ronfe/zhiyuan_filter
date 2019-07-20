@@ -38,7 +38,7 @@ def org_data(each, major):
 
 
 def calc_pd(kw_list, category='L', batch=2, year=2018, sort_by='name', min_score=0, max_score=750):
-    pattern = '/zy_33_41_2019/B_{}.html'
+    pattern = '/zy_34_41_C3_2019/B_{}.html'
     now_time = datetime.datetime.now()
     if now_time.minute >= 10:
         now_time = now_time.hour - 8
@@ -57,12 +57,12 @@ def calc_pd(kw_list, category='L', batch=2, year=2018, sort_by='name', min_score
     college_table = soup.find('table')
     t = get_row(college_table, True)[2:][1:-1]
 
-    major_pattern = '/zy_33_41_2019/4_B_{}_14.html'
+    major_pattern = '/zy_34_41_C3_2019/4_B_{}_{}.html'
     computer_list = list()
 
     for each in t:
         code = each[3]
-        c_major_pattern = major_pattern.format(code)
+        c_major_pattern = major_pattern.format(code, now_time)
         res = requests.get(base_url+c_major_pattern)
         res.encoding = 'gb2312'
         soup = BeautifulSoup(res.text, 'lxml')
